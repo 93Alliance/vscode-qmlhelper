@@ -1,0 +1,265 @@
+{
+  "name": "qmlhelper",
+  "displayName": "qmlhelper",
+  "description": "qml debug linux/windows",
+  "license": "MIT",
+  "version": "0.0.1",
+  "publisher": "flywine",
+  "icon": "resources/logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/93Alliance/vscode-qmlhelper"
+  },
+  "engines": {
+    "vscode": "^1.77.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "qt",
+    "qml"
+  ],
+  "activationEvents": [
+    "onLanguage:qml",
+    "onCommand:qmlhelper.debug.enableFilterFunctions",
+    "onCommand:qmlhelper.debug.disableFilterFunctions",
+    "onCommand:qmlhelper.debug.enableSortMembers",
+    "onCommand:qmlhelper.debug.disableSortMembers",
+    "onDebugResolve:qml"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "qmlhelper.debug.enableFilterFunctions",
+        "category": "QML Debug",
+        "title": "Show Functions",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "qmlhelper.debug.disableFilterFunctions",
+        "category": "QML Debug",
+        "title": "Hide Functions",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "qmlhelper.debug.enableSortMembers",
+        "category": "QML Debug",
+        "title": "Disable Sort",
+        "icon": "$(sort-precedence)"
+      },
+      {
+        "command": "qmlhelper.debug.disableSortMembers",
+        "category": "QML Debug",
+        "title": "Enable Sort",
+        "icon": "$(sort-precedence)"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "QML Helper",
+        "properties": {
+          "qmlhelper.debug.filterFunctions": {
+            "type": "boolean",
+            "default": true,
+            "description": "Hide member functions of object variables in Variables, Watches and Quick Watch views."
+          },
+          "qmlhelper.debug.sortMembers": {
+            "type": "boolean",
+            "default": true,
+            "description": "Sort members of object variables according to their names."
+          },
+          "qmlhelper.qmlformat.command": {
+            "type": "object",
+            "default": {
+              "linux": "qmlformat",
+              "windows": "qmlformat.exe",
+              "osx": "qmlformat"
+            },
+            "description": "Command used to format QML files (an absolute path can be configured)."
+          },
+          "qmlhelper.qmlformat.args": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional additional arguments that will be passed to the command."
+          },
+          "qmlhelper.qmllint.command": {
+            "type": "object",
+            "default": {
+              "linux": "qmllint",
+              "windows": "qmllint.exe",
+              "osx": "qmllint"
+            },
+            "description": "Command used to lint QML files (an absolute path can be configured)."
+          },
+          "qmlhelper.qmllint.args": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional additional arguments that will be passed to the command."
+          }
+        }
+      }
+    ],
+    "languages": [
+      {
+        "id": "qml",
+        "aliases": [
+          "Qt QML"
+        ],
+        "extensions": [
+          ".qml"
+        ]
+      }
+    ],
+    "menus": {
+      "debug/variables/context": [
+        {
+          "command": "qmlhelper.debug.enableFilterFunctions",
+          "group": "options",
+          "when": "debugType == 'qml' && !qmldebug.filterFunctions"
+        },
+        {
+          "command": "qmlhelper.debug.disableFilterFunctions",
+          "group": "options",
+          "when": "debugType == 'qml' && qmldebug.filterFunctions"
+        },
+        {
+          "command": "qmlhelper.debug.enableSortMembers",
+          "group": "options",
+          "when": "debugType == 'qml' && !qmldebug.sortMembers"
+        },
+        {
+          "command": "qmlhelper.debug.disableSortMembers",
+          "group": "options",
+          "when": "debugType == 'qml' && qmldebug.sortMembers"
+        }
+      ]
+    },
+    "breakpoints": [
+      {
+        "language": "qml"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "qml",
+        "label": "QML Debugger",
+        "program": "./out/debug-adapter.js",
+        "runtime": "node",
+        "configurationAttributes": {
+          "attach": {
+            "required": [
+              "host",
+              "port"
+            ],
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "Hostname (or ip address) of the target program's debug service.",
+                "default": "localhost"
+              },
+              "port": {
+                "type": "number",
+                "description": "Port of the target program's debug service."
+              },
+              "paths": {
+                "description": "List of qml source folders resource paths (qrc:/) to physical path mappings.",
+                "type": "object",
+                "patternProperties": {
+                  ".*": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "trace": {
+                "type": "boolean",
+                "description": "Enable logging of the Debug Adapter Protocol.",
+                "default": true
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "qml",
+            "request": "attach",
+            "name": "Attach to QML Debugger",
+            "host": "localhost",
+            "port": 12150,
+            "paths": [],
+            "trace": false
+          }
+        ],
+        "configurationSnippets": [
+          {
+            "label": "QML Debug: Attach",
+            "description": "A new configuration for 'debugging' QML based application. You can only attach to QML based application.",
+            "body": {
+              "name": "QML Debug: Attach",
+              "type": "qml",
+              "request": "attach",
+              "host": "localhost",
+              "port": 12150,
+              "paths": {
+                "qrc:/qml": "^\"\\${workspaceFolder}/<Folder that contain qml files>\""
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "qml",
+        "scopeName": "source.qml",
+        "path": "./resources/syntaxes/qml.tmLanguage"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "node node_modules/webpack/bin/webpack",
+    "watch": "node node_modules/webpack/bin/webpack --watch",
+    "package": "node node_modules/webpack/bin/webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.77.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "eslint": "^8.36.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^4.9.5",
+    "ts-loader": "^9.4.2",
+    "webpack": "^5.76.3",
+    "webpack-cli": "^5.0.1",
+    "@vscode/test-electron": "^2.3.0"
+  },
+  "dependencies": {
+    "@vscode/debugadapter": "^1.59.0",
+    "@vscode/debugprotocol": "^1.59.0",
+    "buffer-hex": "^1.0.0",
+    "colors": "^1.4.0",
+    "module-alias": "^2.2.2",
+    "promise-socket": "^7.0.0"
+  }
+}
