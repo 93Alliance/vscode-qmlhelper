@@ -3,7 +3,7 @@
   "displayName": "qmlhelper",
   "description": "qml debug linux/windows",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "flywine",
   "icon": "resources/logo.png",
   "repository": {
@@ -103,6 +103,32 @@
               "type": "string"
             },
             "description": "Optional additional arguments that will be passed to the command."
+          },
+          "qmlhelper.qmlls.command": {
+            "type": "object",
+            "default": {
+              "linux": "qmlls",
+              "windows": "qmlls.exe",
+              "osx": "qmlls"
+            },
+            "description": "Command used to qmlls files (an absolute path can be configured)."
+          },
+          "qmlhelper.qmlls.args": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional additional arguments that will be passed to the command."
+          },
+          "qmlhelper.qmlls.buildDir": {
+            "type": "object",
+            "default": {
+              "linux": ".",
+              "windows": ".",
+              "osx": "."
+            },
+            "description": "qml module directory path."
           }
         }
       }
@@ -111,10 +137,26 @@
       {
         "id": "qml",
         "aliases": [
-          "Qt QML"
+          "QML",
+          "qml"
         ],
         "extensions": [
           ".qml"
+        ],
+        "configuration": "./resources/languages/qml.json",
+        "icon": {
+          "light": "./resources/qml-icon.svg",
+          "dark": "./resources/qml-icon.svg"
+        }
+      },
+      {
+        "id": "qmldir",
+        "filenames": [
+          "qmldir"
+        ],
+        "aliases": [
+          "QML Directory",
+          "qmldir"
         ]
       }
     ],
@@ -222,7 +264,18 @@
       {
         "language": "qml",
         "scopeName": "source.qml",
-        "path": "./resources/syntaxes/qml.tmLanguage"
+        "path": "./resources/syntaxes/qml.tmLanguage.json"
+      },
+      {
+        "language": "qmldir",
+        "scopeName": "source.qmldir",
+        "path": "./resources/syntaxes/qmldir.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "qml",
+        "path": "./resources/snippets/qml.json"
       }
     ]
   },
@@ -260,6 +313,7 @@
     "buffer-hex": "^1.0.0",
     "colors": "^1.4.0",
     "module-alias": "^2.2.2",
-    "promise-socket": "^7.0.0"
+    "promise-socket": "^7.0.0",
+    "vscode-languageclient": "^8.0.1"
   }
 }

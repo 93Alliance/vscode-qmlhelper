@@ -13,3 +13,8 @@ export function exists(path: string): boolean {
         return false;
     }
 }
+
+
+export function wrapAndJoinCommandArgsWithQuotes(args: string[]): string {
+    return args.map(arg => (arg.includes(' ') ? `"${arg}"` : arg)).join(' ')
+}

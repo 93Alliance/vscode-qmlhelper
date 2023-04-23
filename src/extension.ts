@@ -3,10 +3,15 @@ import { Log, LogLevel } from "./log";
 import { QmlDebugAdapterFactory } from "./debug-adapter";
 import { Qmlformat } from './qml-format';
 import { Qmllint } from './qml-lint';
+import { QmllsContext } from './qmlls';
+
+// https://github.com/seanwu1105/vscode-qt-for-python
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    const outputChannel = vscode.window.createOutputChannel('qmlhelper');
+
     Log.trace("extension.activate", [context]);
     Log.instance().level = LogLevel.Debug;
 
@@ -40,8 +45,10 @@ export function activate(context: vscode.ExtensionContext) {
             }
         ),
         vscode.debug.registerDebugAdapterDescriptorFactory("qml", new QmlDebugAdapterFactory()),
+        outputChannel,
         new Qmlformat(),
-        new Qmllint()
+        // new Qmllint(),
+        new QmllsContext(outputChannel)
     );
 }
 

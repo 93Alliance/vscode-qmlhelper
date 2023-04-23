@@ -104,14 +104,7 @@ export class Qmlformat implements Disposable {
                                 if (unlinkError) {
                                     return reject(`Formatting of '${fileName}' ended with an error because file '${tempFilePath}' could not be deleted: '${unlinkError.message}'.`);
                                 }
-
-                                const bakfile = tempFilePath + "~";
-                                fs.unlink(bakfile, (unlinkError) => {
-                                    if (unlinkError) {
-                                        return reject(`Formatting of '${fileName}' ended with an error because file '${bakfile}' could not be deleted: '${unlinkError.message}'.`);
-                                    }
-                                    return resolve(readData);
-                                });
+                                resolve(readData);
                             });
                         });
                     });
