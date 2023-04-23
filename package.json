@@ -157,7 +157,8 @@
         "aliases": [
           "QML Directory",
           "qmldir"
-        ]
+        ],
+        "configuration": "./resources/languages/qmldir.json"
       }
     ],
     "menus": {
