@@ -3,7 +3,7 @@
   "displayName": "qmlhelper",
   "description": "qml debug linux/windows",
   "license": "MIT",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "publisher": "flywine",
   "icon": "resources/logo.png",
   "repository": {

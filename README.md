@@ -10,6 +10,13 @@
 - qmldir syntax highlight
 - qml autocomplete by qmlls
 
+## TODO
+
+- [ ] QML goto definition.
+- [ ] QML hover.
+- [ ] Auto find custom QML module.
+
+
 ## QML Format
 
 Use the qmlformat executable file to format qml file.

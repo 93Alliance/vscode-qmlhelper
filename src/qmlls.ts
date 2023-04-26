@@ -4,6 +4,7 @@ import * as os from 'os';
 import {
     LanguageClient, Executable, ServerOptions, LanguageClientOptions, RevealOutputChannelOn
 } from "vscode-languageclient/node"
+import { onExtComplete } from './qml-lsp-middleware';
 
 export class QmllsContext implements vscode.Disposable {
     client!: LanguageClient;
@@ -102,13 +103,32 @@ export class QmllsContext implements vscode.Disposable {
             synchronize: {
                 // Notify the server about file changes to '.clientrc files contained in the workspace
                 fileEvents: vscode.workspace.createFileSystemWatcher('**/*.qml')
+            },
+            initializationOptions: {
+                extendedClientCapabilities: {
+                    definitionProvider: true
+                }
+            },
+            middleware: {
+                async provideCompletionItem(document, position, context, token, next) {
+                    return onExtComplete(document, position, context, token, next);
+                },
+                async provideDefinition(document, position, token, next) {
+                    return await next(document, position, token);
+                }
             }
         }
 
         this.client = new LanguageClient("qmlls", "QML Language Server", serverOptions, clientOptions);
         // 启动，同时也会启动服务端。
-        this.client.start();
+        this.client.start().then(() => {
+            // this.client.initializeResult?.then((result: any) => {
+            //     console.log(result);
+            // });
+        });
 
-        this.outputChannel.append('Qmlls Language Server is now active!');
+        this.outputChannel.append('Qmlls Language Server is now active!\n');
+
+        
     }
 }
